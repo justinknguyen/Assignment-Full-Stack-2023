@@ -1,11 +1,14 @@
-import { Counter } from "./components/Counter";
-import { FetchData } from "./components/FetchData";
 import { Home } from "./components/Home";
+import GetEmployees from "./components/GetEmployees";
 
 const AppRoutes = [
   {
     index: true,
     element: <Home />
+  },
+  {
+    path: '/get-employees',
+    element: <GetEmployees />
   }
 ];
 
