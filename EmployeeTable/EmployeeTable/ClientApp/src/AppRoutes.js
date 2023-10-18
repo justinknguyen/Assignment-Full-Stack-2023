@@ -1,5 +1,6 @@
 import { Home } from "./components/Home";
 import GetEmployees from "./components/GetEmployees";
+import AddEmployee from "./components/AddEmployee";
 
 const AppRoutes = [
   {
@@ -9,6 +10,10 @@ const AppRoutes = [
   {
     path: '/get-employees',
     element: <GetEmployees />
+  },
+  {
+    path: '/add-employee',
+    element: <AddEmployee />
   }
 ];
 

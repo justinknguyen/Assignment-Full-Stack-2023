@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 
 /**
- * Get and list all employees in the database
+ * Get and list all employees in the database.
  */
 const GetEmployees = () => {
     const [employees, setEmployees] = useState([]);
@@ -12,7 +12,7 @@ const GetEmployees = () => {
             .then(res => res.json())
             .then(res => setEmployees(res))
             .catch(err => console.error(err))
-    }, [])
+    }, []);
 
     return (
         <>
@@ -29,7 +29,7 @@ const GetEmployees = () => {
                 ))}
             </ul>
         </>
-    )
+    );
 }
 
 export default GetEmployees;
