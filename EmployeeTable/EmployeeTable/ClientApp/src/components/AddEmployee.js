@@ -1,7 +1,7 @@
 import { useState } from 'react';
 
 /**
- * Add an employeee to the database.
+ * Add an employee to the database.
  */
 const AddEmployee = () => {
     const [isSubmitted, setIsSubmitted] = useState(false);
@@ -12,9 +12,10 @@ const AddEmployee = () => {
         salary: ''
     });
 
-    // Post the form's data to the API
+    // Add the new employee from the form's data
     async function handleSubmit(event) {
         event.preventDefault();
+
         await fetch('api/employees', {
             method: 'POST',
             headers: {
@@ -39,10 +40,10 @@ const AddEmployee = () => {
                 }
             })
             .catch(err => {
-                // Network response error
                 console.error(err);
                 setSuccess(false);
             });
+
         setIsSubmitted(true);
     }
 
@@ -89,6 +90,7 @@ const AddEmployee = () => {
                             value={formData.salary}
                             onChange={handleInputChange}
                             className="form-control"
+                            required
                         />
                         </label>
                     </div>
@@ -96,10 +98,9 @@ const AddEmployee = () => {
                 </form>
             </div>
 
-            {/* Show result */}
             {isSubmitted ? (
                 success ? (
-                    <h2>Success!</h2>
+                    <h2>Added!</h2>
                 ) : (
                     <h2>Failed.</h2>
                 )
