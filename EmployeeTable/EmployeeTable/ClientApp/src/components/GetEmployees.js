@@ -24,7 +24,7 @@ const GetEmployees = () => {
                         <p><strong>Id:</strong> {emp.id}</p>
                         <p><strong>First Name:</strong> {emp.firstName}</p>
                         <p><strong>Last Name:</strong> {emp.lastName}</p>
-                        <p><strong>Salary:</strong> {emp.salary}</p>
+                        <p><strong>Salary:</strong> ${emp.salary.toLocaleString()}</p>
                     </li>
                 ))}
             </ul>

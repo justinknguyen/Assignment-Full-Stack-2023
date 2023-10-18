@@ -2,6 +2,7 @@ import { Home } from "./components/Home";
 import GetEmployees from "./components/GetEmployees";
 import AddEmployee from "./components/AddEmployee";
 import RemoveEmployee from "./components/RemoveEmployee";
+import EditEmployee from "./components/EditEmployee";
 
 const AppRoutes = [
   {
@@ -19,6 +20,10 @@ const AppRoutes = [
   {
     path: '/remove',
     element: <RemoveEmployee />
+  },
+  {
+    path: '/edit',
+    element: <EditEmployee />
   }
 ];
 
