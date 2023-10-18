@@ -1,6 +1,10 @@
+using EmployeeTable.Models;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
+builder.Services.Configure<CompanyDatabaseSettings>(
+    builder.Configuration.GetSection("CompanyDatabase"));
 
 builder.Services.AddControllersWithViews();
 
