@@ -1,4 +1,7 @@
-﻿namespace EmployeeTable.Models
+﻿/*
+ * Used to store the appsettings.json file's CompanyDatabase property values.
+ */
+namespace EmployeeTable.Models
 {
     public class CompanyDatabaseSettings
     {

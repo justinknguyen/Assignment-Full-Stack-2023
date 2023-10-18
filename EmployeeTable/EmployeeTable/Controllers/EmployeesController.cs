@@ -2,6 +2,9 @@
 using EmployeeTable.Services;
 using Microsoft.AspNetCore.Mvc;
 
+/*
+ * Defines routes and handles incoming HTTP requests to perform CRUD operations using the Service class, EmployeesService.
+ */
 namespace EmployeeTable.Controllers
 {
     [ApiController]
@@ -15,12 +18,14 @@ namespace EmployeeTable.Controllers
             _employeesService = employeesService;
         }
 
+        // GET: api/employees
         [HttpGet]
         public async Task<List<Employee>> Get()
         {
             return await _employeesService.GetAsync();
         }
-            
+
+        // GET: api/employees/{id}
         [HttpGet("{id:length(24)}")]
         public async Task<ActionResult<Employee>> Get(string id)
         {
@@ -32,6 +37,7 @@ namespace EmployeeTable.Controllers
             return employee;
         }
 
+        // POST: api/employees
         [HttpPost]
         public async Task<IActionResult> Post(Employee newEmployee)
         {
@@ -39,6 +45,7 @@ namespace EmployeeTable.Controllers
             return CreatedAtAction(nameof(Get), new { id = newEmployee.Id }, newEmployee);
         }
 
+        // PUT: api/employees/{id}
         [HttpPut("{id:length(24)}")]
         public async Task<IActionResult> Update(string id, Employee updatedEmployee)
         {
@@ -52,6 +59,7 @@ namespace EmployeeTable.Controllers
             return NoContent();
         }
 
+        // DELETE: api/employees/{id}
         [HttpDelete("{id:length(24)}")]
         public async Task<IActionResult> Delete(string id)
         {

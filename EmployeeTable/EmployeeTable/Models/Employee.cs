@@ -1,6 +1,9 @@
 ﻿using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
 
+/*
+ * Defines the data model (structure and properties) for employees.
+ */
 namespace EmployeeTable.Models
 {
     public class Employee
