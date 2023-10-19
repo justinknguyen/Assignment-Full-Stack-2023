@@ -15,32 +15,40 @@ import AddEmployee from './AddEmployee';
  */
 const GetEmployees = () => {
     const [employees, setEmployees] = useState([]);
-    const [editEmployee, setEditEmployee] = useState();
+    const [editEmployee, setEditEmployee] = useState(null);
     const [updatedData, setUpdatedData] = useState({
         firstName: '',
         lastName: '',
         salary: ''
     });
 
-    // Handles changes in the input fields
+    // On Edit button press, initialize employee to edit info 
+    function handleEdit(employee) {
+        setEditEmployee(employee);
+        setUpdatedData({
+            ...employee
+        });
+    }
+
+    // Tracks changes in the text fields
     function handleInputChange(event) {
         const { name, value } = event.target;
         setUpdatedData({
-            ...editEmployee,
+            ...updatedData,
             [name]: value
         });
     };
 
-    // Update the employee's information based on the input fields
-    function handleSave(employee) {
-        if (employee.firstName === '' ||
-            employee.lastName === '' ||
-            employee.salary === '') {
+    // Update the employee's information based on the text fields
+    function handleSave() {
+        if (updatedData.firstName === '' ||
+            updatedData.lastName === '' ||
+            updatedData.salary === '') {
             console.error('Please input all fields.');
             return;
         }
 
-        fetch(`api/employees/${employee.id}`, {
+        fetch(`api/employees/${editEmployee.id}`, {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json'
@@ -52,7 +60,7 @@ const GetEmployees = () => {
                     // Employee information updated
                     console.log('Updated the employee successfully!');
                     setEmployees(employees.map(emp => {
-                        if (emp.id === employee.id) {
+                        if (emp.id === editEmployee.id) {
                             return { ...emp, ...updatedData };
                         }
                         return emp;
@@ -111,8 +119,9 @@ const GetEmployees = () => {
                                 key={emp.id}
                                 sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
                             >
+                                
                                 {editEmployee === emp ? (
-                                    <>
+                                    <> {/* Row is the Employee to edit */}
                                         <TableCell component='th' scope='row'>
                                             <TextField
                                                 required
@@ -120,7 +129,7 @@ const GetEmployees = () => {
                                                 name='firstName'
                                                 autoComplete='off'
                                                 onChange={handleInputChange}
-                                                defaultValue={emp.firstName}
+                                                defaultValue={editEmployee.firstName}
                                             />
                                         </TableCell>
                                         <TableCell align='left'>
@@ -130,7 +139,7 @@ const GetEmployees = () => {
                                                 name='lastName'
                                                 autoComplete='off'
                                                 onChange={handleInputChange}
-                                                defaultValue={emp.lastName}
+                                                defaultValue={editEmployee.lastName}
                                             />
                                         </TableCell>
                                         <TableCell align='left'>
@@ -140,7 +149,7 @@ const GetEmployees = () => {
                                                 name='salary'
                                                 autoComplete='off'
                                                 onChange={handleInputChange}
-                                                defaultValue={emp.salary}
+                                                defaultValue={editEmployee.salary}
                                             />
                                         </TableCell>
                                         <TableCell align='right'>
@@ -148,7 +157,7 @@ const GetEmployees = () => {
                                                 variant='contained'
                                                 type='submit'
                                                 color='success'
-                                                onClick={() => handleSave(emp)}
+                                                onClick={() => handleSave(editEmployee)}
                                                 sx={{ marginRight: 1 }}
                                             >
                                                 Save
@@ -163,7 +172,7 @@ const GetEmployees = () => {
                                         </TableCell>
                                     </>
                                 ) : (
-                                    <>
+                                    <> {/* Row is not the Employee to edit */}
                                         <TableCell component='th' scope='row'>
                                             {emp.firstName}
                                         </TableCell>
@@ -176,8 +185,8 @@ const GetEmployees = () => {
                                         <TableCell align='right'>
                                             <Button
                                                 variant='contained'
-                                                onClick={() => setEditEmployee(emp)}
                                                 sx={{ marginRight: 1 }}
+                                                onClick={() => handleEdit(emp)}
                                             >
                                                 Edit
                                             </Button>
