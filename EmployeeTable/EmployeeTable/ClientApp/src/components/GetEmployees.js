@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
@@ -9,13 +10,52 @@ import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 
 /**
- * Get and list all employees in the database.
+ * Table of all employees, including operations to add, delete, and edit employees.
  */
 const GetEmployees = () => {
     const [employees, setEmployees] = useState([]);
+    const [employeeEdit, setEmployeeEdit] = useState();
+    const [employeeData, setEmployeeData] = useState({
+        firstName: '',
+        lastName: '',
+        salary: ''
+    });
 
-    function handleEdit(employee) {
-        console.log(employee);
+    // Handles changes in the input fields
+    function handleInputChange(event) {
+        const { name, value } = event.target;
+        setEmployeeData({
+            ...employeeEdit,
+            [name]: value
+        });
+    };
+
+    // Update the employee's information based on the input fields
+    function handleSave(employee) {
+        fetch(`api/employees/${employee.id}`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(employeeData)
+        })
+            .then(res => {
+                if (res.ok) {
+                    // Employee information updated
+                    console.log('Updated the employee successfully!');
+                    setEmployees(employees.map(emp => {
+                        if (emp.id === employee.id) {
+                            return { ...emp, ...employeeData };
+                        }
+                        return emp;
+                    }));
+                    setEmployeeEdit(null)
+                } else {
+                    // Employee information could not be updated
+                    console.error('Error editing the employee.');
+                }
+            })
+            .catch(err => console.error(err));
     }
 
     // Remove the employee based on Id
@@ -33,9 +73,7 @@ const GetEmployees = () => {
                     console.error('Error removing the employee.');
                 }
             })
-            .catch(err => {
-                console.error(err);
-            });
+            .catch(err => console.error(err));
     }
 
     // Fetch all employees on page load
@@ -50,28 +88,72 @@ const GetEmployees = () => {
         <>
             <h1>Employees</h1>
             <TableContainer component={Paper}>
-                <Table sx={{ minWidth: 650 }} aria-label="simple table">
+                <Table sx={{ minWidth: 650 }} aria-label='simple table'>
                     <TableHead>
                         <TableRow className='table-header'>
-                            <TableCell>First Name</TableCell>
-                            <TableCell align="right">Last Name</TableCell>
-                            <TableCell align="right">Salary</TableCell>
-                            <TableCell align="right">Actions</TableCell>
+                            <TableCell className='header-text'>First Name</TableCell>
+                            <TableCell align='left' className='header-text'>Last Name</TableCell>
+                            <TableCell align='left' className='header-text'>Salary</TableCell>
+                            <TableCell align='right' className='header-text'>Actions</TableCell>
                         </TableRow>
                     </TableHead>
                     <TableBody>
-                        {employees.map((employee) => (
+                        {employees.map(emp => (
                             <TableRow
-                                key={employee.id}
+                                key={emp.id}
                                 sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
                             >
-                                <TableCell component="th" scope="row">{employee.firstName}</TableCell>
-                                <TableCell align="right">{employee.lastName}</TableCell>
-                                <TableCell align="right"> ${employee.salary.toLocaleString()}</TableCell>
-                                <TableCell align="right">
-                                    <Button variant="text" onClick={() => handleEdit(employee)}>Edit</Button>
-                                    <Button variant="text" onClick={() => handleDelete(employee)}>Delete</Button>
-                                </TableCell>
+                                {employeeEdit === emp ? (
+                                    <>
+                                        <TableCell component='th' scope='row'>
+                                            <TextField
+                                                required
+                                                label='First Name'
+                                                name='firstName'
+                                                onChange={handleInputChange}
+                                                defaultValue={emp.firstName}
+                                            />
+                                        </TableCell>
+                                        <TableCell align='left'>
+                                            <TextField
+                                                required
+                                                label='Last Name'
+                                                name='lastName'
+                                                onChange={handleInputChange}
+                                                defaultValue={emp.lastName}
+                                            />
+                                        </TableCell>
+                                        <TableCell align='left'>
+                                            <TextField
+                                                required
+                                                label='Salary'
+                                                name='salary'
+                                                onChange={handleInputChange}
+                                                defaultValue={emp.salary}
+                                            />
+                                        </TableCell>
+                                        <TableCell align='right'>
+                                            <Button variant='text' onClick={() => handleSave(emp)}>Save</Button>
+                                            <Button variant='text' onClick={() => setEmployeeEdit(null)}>Cancel</Button>
+                                        </TableCell>
+                                    </>
+                                ) : (
+                                    <>
+                                        <TableCell component='th' scope='row'>
+                                            {emp.firstName}
+                                        </TableCell>
+                                        <TableCell align='left'>
+                                            {emp.lastName}
+                                        </TableCell>
+                                        <TableCell align='left'>
+                                            ${emp.salary.toLocaleString()}
+                                        </TableCell>
+                                        <TableCell align='right'>
+                                            <Button variant='text' onClick={() => setEmployeeEdit(emp)}>Edit</Button>
+                                            <Button variant='text' onClick={() => handleDelete(emp)}>Delete</Button>
+                                        </TableCell>
+                                    </>
+                                )}
                             </TableRow>
                         ))}
                     </TableBody>

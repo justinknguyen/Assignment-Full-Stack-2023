@@ -25,5 +25,8 @@ code {
 }
 
 .table-header {
-  background-color: #ececec;
+  background-color: #f0f0f0;
+}
+.table-header .header-text {
+  font-weight: bold;
 }
