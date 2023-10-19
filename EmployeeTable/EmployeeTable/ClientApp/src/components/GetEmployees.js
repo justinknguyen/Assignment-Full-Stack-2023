@@ -8,6 +8,7 @@ import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
+import AddEmployee from './AddEmployee';
 
 /**
  * Table of all employees, including operations to add, delete, and edit employees.
@@ -110,6 +111,7 @@ const GetEmployees = () => {
                                                 required
                                                 label='First Name'
                                                 name='firstName'
+                                                autoComplete='off'
                                                 onChange={handleInputChange}
                                                 defaultValue={emp.firstName}
                                             />
@@ -119,6 +121,7 @@ const GetEmployees = () => {
                                                 required
                                                 label='Last Name'
                                                 name='lastName'
+                                                autoComplete='off'
                                                 onChange={handleInputChange}
                                                 defaultValue={emp.lastName}
                                             />
@@ -128,6 +131,7 @@ const GetEmployees = () => {
                                                 required
                                                 label='Salary'
                                                 name='salary'
+                                                autoComplete='off'
                                                 onChange={handleInputChange}
                                                 defaultValue={emp.salary}
                                             />
@@ -159,6 +163,10 @@ const GetEmployees = () => {
                     </TableBody>
                 </Table>
             </TableContainer>
+
+            <br></br>
+
+            <AddEmployee setEmployees={setEmployees}/>
         </>
     );
 }

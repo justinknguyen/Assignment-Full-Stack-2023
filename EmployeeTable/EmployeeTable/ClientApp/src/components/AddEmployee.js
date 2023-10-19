@@ -1,112 +1,108 @@
 import { useState } from 'react';
+import TextField from '@mui/material/TextField';
+import Button from '@mui/material/Button';
+import Box from '@mui/material/Box';
+import Stack from '@mui/material/Stack';
 
 /**
  * Add an employee to the database.
  */
-const AddEmployee = () => {
-    const [isSubmitted, setIsSubmitted] = useState(false);
-    const [success, setSuccess] = useState(false);
-    const [formData, setFormData] = useState({
+const AddEmployee = ({ setEmployees }) => {
+    const [newEmployee, setNewEmployee] = useState({
         firstName: '',
         lastName: '',
         salary: ''
     });
 
-    // Add the new employee from the form's data
-    async function handleSubmit(event) {
-        event.preventDefault();
+    // Update the employee list in parent to re-render table
+    function updateEmployeeList() {
+        fetch('api/employees')
+            .then(res => res.json())
+            .then(res => setEmployees(res))
+            .catch(err => console.error(err))
+    }
 
-        await fetch('api/employees', {
+    // Handles changes in the input fields
+    function handleInputChange(event) {
+        const { name, value } = event.target;
+        setNewEmployee({
+            ...newEmployee,
+            [name]: value
+        });
+    };
+
+    // Add the new employee from the form's data
+    function handleSubmit() {
+        fetch('api/employees', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify(formData)
+            body: JSON.stringify(newEmployee)
         })
             .then(res => {
                 if (res.ok) {
                     // Employee added, reset the form
                     console.log('Added the employee successfully!');
-                    setFormData({
+                    updateEmployeeList();
+                    setNewEmployee({
                         firstName: '',
                         lastName: '',
                         salary: ''
                     });
-                    setSuccess(true);
                 } else {
                     // Employee could not be added
                     console.error('Error adding the employee.');
-                    setSuccess(false);
                 }
             })
-            .catch(err => {
-                console.error(err);
-                setSuccess(false);
-            });
-
-        setIsSubmitted(true);
+            .catch(err => console.error(err));
     }
-
-    // Handles changes in the form's input fields
-    function handleInputChange(event) {
-        const { name, value } = event.target;
-        setFormData({
-            ...formData,
-            [name]: value
-        });
-    };
 
     return (
         <>
             <h1>Add an Employee</h1>
-            <div className="form-control">
-                <form onSubmit={handleSubmit}>
-                    <div className="form-group">
-                        <label>Enter First Name: <input
-                            type="text"
-                            name="firstName"
-                            value={formData.firstName}
-                            onChange={handleInputChange}
-                            className="form-control"
-                            required
-                        />
-                        </label>
-                    </div>
-                    <div className="form-group">
-                        <label>Enter Last Name: <input
-                            type="text"
-                            name="lastName"
-                            value={formData.lastName}
-                            onChange={handleInputChange}
-                            className="form-control"
-                            required
-                        />
-                        </label>
-                    </div>
-                    <div className="form-group">
-                        <label>Enter Salary: <input
-                            type="text"
-                            name="salary"
-                            value={formData.salary}
-                            onChange={handleInputChange}
-                            className="form-control"
-                            required
-                        />
-                        </label>
-                    </div>
-                    <button type="submit" className="btn btn-primary ">Submit</button>
-                </form>
-            </div>
+            <Box
+                component='form'
+                sx={{
+                    '& .MuiTextField-root': { m: 1, width: '25ch' },
+                }}
+                autoComplete='off'
+                onSubmit={handleSubmit}
+            >
 
-            {isSubmitted ? (
-                success ? (
-                    <h2>Added!</h2>
-                ) : (
-                    <h2>Failed.</h2>
-                )
-            ) : (
-                null
-            )}
+                <Stack spacing={2} direction="row">
+                    <TextField
+                        required
+                        id='outlined-required'
+                        label='First Name'
+                        name='firstName'
+                        onChange={handleInputChange}
+                        value={newEmployee.firstName}
+                    />
+                    <TextField
+                        required
+                        id='outlined-required'
+                        label='Last Name'
+                        name='lastName'
+                        onChange={handleInputChange}
+                        value={newEmployee.lastName}
+                    />
+                    <TextField
+                        required
+                        id='outlined-required'
+                        label='Salary'
+                        name='salary'
+                        onChange={handleInputChange}
+                        value={newEmployee.salary}
+                    />
+                    <Button
+                        variant='contained'
+                        onClick={handleSubmit}
+                    >
+                        Submit
+                    </Button>
+                </Stack>
+            </Box>
         </>
     );
 }
