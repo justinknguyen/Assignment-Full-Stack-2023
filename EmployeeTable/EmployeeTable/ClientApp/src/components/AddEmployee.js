@@ -1,9 +1,10 @@
 import { useState } from 'react';
-import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
 import TableCell from '@mui/material/TableCell';
 import TableRow from '@mui/material/TableRow';
 import TableFooter from '@mui/material/TableFooter';
+
+import InputForm from './InputForm';
 
 /**
  * Add an employee to the database.
@@ -76,38 +77,10 @@ const AddEmployee = ({ setEmployees }) => {
                 <TableRow >
                     {addPressed ? (
                         <>
-                            <TableCell component='th' scope='row'>
-                                <TextField
-                                    required
-                                    label='First Name'
-                                    name='firstName'
-                                    autoComplete='off'
-                                    size='small'
-                                    onChange={handleInputChange}
-                                    value={newEmployee.firstName}
-                                />
-                            </TableCell>
-                            <TableCell align='left'>
-                                <TextField
-                                    required
-                                    label='Last Name'
-                                    name='lastName'
-                                    autoComplete='off'
-                                    size='small'
-                                    onChange={handleInputChange}
-                                    value={newEmployee.lastName}
-                                />
-                            </TableCell>
-                            <TableCell align='left'>
-                                <TextField
-                                    label='Salary'
-                                    name='salary'
-                                    autoComplete='off'
-                                    size='small'
-                                    onChange={handleInputChange}
-                                    value={newEmployee.salary}
-                                />
-                            </TableCell>
+                            <InputForm
+                                employee={newEmployee}
+                                handleInputChange={handleInputChange}
+                            />
                             <TableCell align='right'>
                                 <Button
                                     variant='contained'
