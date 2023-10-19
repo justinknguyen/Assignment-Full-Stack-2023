@@ -1,5 +1,9 @@
 # Take-home Assignment (Full Stack) #
 
+## Result
+![result](Result.png)
+
+## Instructions
 ### Goal: ###
 * Create an Employee Table like the one in the image below.
 * Use any front-end framework (Angular, React, Vue, ect...) or CSS library to accomplish this.
