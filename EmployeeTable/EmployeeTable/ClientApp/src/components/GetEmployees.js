@@ -41,11 +41,12 @@ const GetEmployees = () => {
 
     // Update the employee's information based on the text fields
     function handleSave() {
-        if (updatedData.firstName === '' ||
-            updatedData.lastName === '' ||
-            updatedData.salary === '') {
-            console.error('Please input all fields.');
+        if (updatedData.firstName === '' || updatedData.lastName === '') {
+            console.error('Please input a name.');
             return;
+        }
+        if (updatedData.salary === '') {
+            updatedData.salary = 0;
         }
 
         fetch(`api/employees/${editEmployee.id}`, {
@@ -102,9 +103,9 @@ const GetEmployees = () => {
 
     return (
         <>
-            <h1>Employees</h1>
-            <TableContainer component={Paper} sx={{ width: '75%' }}>
-                <Table aria-label='simple table'>
+            <h2>Employees</h2>
+            <TableContainer component={Paper} sx={{ width: '80%' }}>
+                <Table size='medium'>
                     <TableHead>
                         <TableRow className='table-header'>
                             <TableCell className='header-text'>First Name</TableCell>
@@ -115,19 +116,16 @@ const GetEmployees = () => {
                     </TableHead>
                     <TableBody>
                         {employees.map(emp => (
-                            <TableRow
-                                key={emp.id}
-                                sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
-                            >
-                                
+                            <TableRow key={emp.id}>
                                 {editEmployee === emp ? (
-                                    <> {/* Row is the Employee to edit */}
+                                    <>
                                         <TableCell component='th' scope='row'>
                                             <TextField
                                                 required
                                                 label='First Name'
                                                 name='firstName'
                                                 autoComplete='off'
+                                                size='small'
                                                 onChange={handleInputChange}
                                                 defaultValue={editEmployee.firstName}
                                             />
@@ -138,16 +136,17 @@ const GetEmployees = () => {
                                                 label='Last Name'
                                                 name='lastName'
                                                 autoComplete='off'
+                                                size='small'
                                                 onChange={handleInputChange}
                                                 defaultValue={editEmployee.lastName}
                                             />
                                         </TableCell>
                                         <TableCell align='left'>
                                             <TextField
-                                                required
                                                 label='Salary'
                                                 name='salary'
                                                 autoComplete='off'
+                                                size='small'
                                                 onChange={handleInputChange}
                                                 defaultValue={editEmployee.salary}
                                             />
@@ -157,14 +156,16 @@ const GetEmployees = () => {
                                                 variant='contained'
                                                 type='submit'
                                                 color='success'
+                                                size='small'
                                                 onClick={() => handleSave(editEmployee)}
                                                 sx={{ marginRight: 1 }}
                                             >
                                                 Save
                                             </Button>
                                             <Button
-                                                variant='contained'
-                                                color='secondary'
+                                                variant='outlined'
+                                                color='error'
+                                                size='small'
                                                 onClick={() => setEditEmployee(null)}
                                             >
                                                 Cancel
@@ -172,7 +173,7 @@ const GetEmployees = () => {
                                         </TableCell>
                                     </>
                                 ) : (
-                                    <> {/* Row is not the Employee to edit */}
+                                    <>
                                         <TableCell component='th' scope='row'>
                                             {emp.firstName}
                                         </TableCell>
@@ -185,6 +186,7 @@ const GetEmployees = () => {
                                         <TableCell align='right'>
                                             <Button
                                                 variant='contained'
+                                                size='small'
                                                 sx={{ marginRight: 1 }}
                                                 onClick={() => handleEdit(emp)}
                                             >
@@ -193,6 +195,7 @@ const GetEmployees = () => {
                                             <Button
                                                 variant='contained'
                                                 color='error'
+                                                size='small'
                                                 onClick={() => handleDelete(emp)}
                                             >
                                                 Delete
@@ -201,14 +204,12 @@ const GetEmployees = () => {
                                     </>
                                 )}
                             </TableRow>
+                            
                         ))}
                     </TableBody>
+                    <AddEmployee setEmployees={setEmployees} />
                 </Table>
             </TableContainer>
-
-            <br></br>
-
-            <AddEmployee setEmployees={setEmployees} />
         </>
     );
 }

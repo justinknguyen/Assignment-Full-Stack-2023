@@ -1,12 +1,15 @@
 import { useState } from 'react';
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
-import Stack from '@mui/material/Stack';
+import TableCell from '@mui/material/TableCell';
+import TableRow from '@mui/material/TableRow';
+import TableFooter from '@mui/material/TableFooter';
 
 /**
  * Add an employee to the database.
  */
 const AddEmployee = ({ setEmployees }) => {
+    const [addPressed, setAddPressed] = useState(false);
     const [newEmployee, setNewEmployee] = useState({
         firstName: '',
         lastName: '',
@@ -33,11 +36,12 @@ const AddEmployee = ({ setEmployees }) => {
     // Add the new employee from the form's data
     function handleSubmit(event) {
         event.preventDefault();
-        if (newEmployee.firstName === '' ||
-            newEmployee.lastName === '' ||
-            newEmployee.salary === '') {
-            console.error('Please input all fields.');
+        if (newEmployee.firstName === '' || newEmployee.lastName === '') {
+            console.error('Please input a name.');
             return;
+        }
+        if (newEmployee.salary === '') {
+            newEmployee.salary = 0;
         }
 
         fetch('api/employees', {
@@ -51,6 +55,7 @@ const AddEmployee = ({ setEmployees }) => {
                 if (res.ok) {
                     // Employee added, reset the form
                     console.log('Added the employee successfully!');
+                    setAddPressed(false)
                     updateEmployeeList();
                     setNewEmployee({
                         firstName: '',
@@ -67,38 +72,81 @@ const AddEmployee = ({ setEmployees }) => {
 
     return (
         <>
-            <h2>Add an Employee</h2>
-            <form noValidate onSubmit={handleSubmit}>
-                <Stack spacing={2} direction="row">
-                    <TextField
-                        required
-                        label='First Name'
-                        name='firstName'
-                        onChange={handleInputChange}
-                        value={newEmployee.firstName}
-                    />
-                    <TextField
-                        required
-                        label='Last Name'
-                        name='lastName'
-                        onChange={handleInputChange}
-                        value={newEmployee.lastName}
-                    />
-                    <TextField
-                        required
-                        label='Salary'
-                        name='salary'
-                        onChange={handleInputChange}
-                        value={newEmployee.salary}
-                    />
-                    <Button
-                        variant='contained'
-                        type='submit'
-                    >
-                        Submit
-                    </Button>
-                </Stack>
-            </form>
+            <TableFooter>
+                <TableRow >
+                    {addPressed ? (
+                        <>
+                            <TableCell component='th' scope='row'>
+                                <TextField
+                                    required
+                                    label='First Name'
+                                    name='firstName'
+                                    autoComplete='off'
+                                    size='small'
+                                    onChange={handleInputChange}
+                                    value={newEmployee.firstName}
+                                />
+                            </TableCell>
+                            <TableCell align='left'>
+                                <TextField
+                                    required
+                                    label='Last Name'
+                                    name='lastName'
+                                    autoComplete='off'
+                                    size='small'
+                                    onChange={handleInputChange}
+                                    value={newEmployee.lastName}
+                                />
+                            </TableCell>
+                            <TableCell align='left'>
+                                <TextField
+                                    label='Salary'
+                                    name='salary'
+                                    autoComplete='off'
+                                    size='small'
+                                    onChange={handleInputChange}
+                                    value={newEmployee.salary}
+                                />
+                            </TableCell>
+                            <TableCell align='right'>
+                                <Button
+                                    variant='contained'
+                                    type='submit'
+                                    size='small'
+                                    sx={{ marginRight: 1 }}
+                                    onClick={handleSubmit}
+                                >
+                                    Submit
+                                </Button>
+                                <Button
+                                    variant='outlined'
+                                    color='error'
+                                    size='small'
+                                    onClick={() => setAddPressed(false)}
+                                >
+                                    Cancel
+                                </Button>
+                            </TableCell >
+                        </>
+                    ) : (
+                        <>
+                            <TableCell component='th' scope='row'></TableCell>
+                            <TableCell align='left'></TableCell>
+                            <TableCell align='left'></TableCell>
+                            <TableCell align='right'>
+                                <Button
+                                    variant='text'
+                                    type='submit'
+                                    color='secondary'
+                                    onClick={() => setAddPressed(true)}
+                                >
+                                    Add Employee
+                                </Button>
+                            </TableCell >
+                        </>
+                    )}
+                </TableRow >
+            </TableFooter >
         </>
     );
 }
