@@ -1,5 +1,4 @@
 import { useState, useEffect } from 'react';
-import Button from '@mui/material/Button';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
 import TableCell from '@mui/material/TableCell';
@@ -11,6 +10,7 @@ import Paper from '@mui/material/Paper';
 import AddEmployee from './AddEmployee';
 import InputForm from './InputForm';
 import EditEmployee from './EditEmployee';
+import RemoveEmployee from './RemoveEmployee';
 
 /**
  * Table of all employees, including operations to add, delete, and edit employees.
@@ -39,24 +39,6 @@ const GetEmployees = () => {
         });
     };
 
-    // Remove the employee based on Id
-    function handleDelete(employee) {
-        fetch(`api/employees/${employee.id}`, {
-            method: 'DELETE'
-        })
-            .then(res => {
-                if (res.ok) {
-                    // Employee removed
-                    console.log('Removed the employee successfully!');
-                    setEmployees(employees.filter(emp => emp.id !== employee.id));
-                } else {
-                    // Employee could not be removed
-                    console.error('Error removing the employee.');
-                }
-            })
-            .catch(err => console.error(err));
-    }
-
     // Fetch all employees on page load
     useEffect(() => {
         fetch('api/employees')
@@ -82,26 +64,10 @@ const GetEmployees = () => {
                         {employees.map(emp => (
                             <TableRow key={emp.id}>
                                 {editEmployee === emp ? (
-                                    <>
-                                        <InputForm
-                                            employee={editEmployee}
-                                            handleInputChange={handleInputChange}
-                                        />
-                                        <TableCell align='right'>
-                                            <EditEmployee
-                                                {...childProps}
-                                                employee={emp}
-                                            />
-                                            <Button
-                                                variant='outlined'
-                                                color='error'
-                                                size='small'
-                                                onClick={() => setEditEmployee(null)}
-                                            >
-                                                Cancel
-                                            </Button>
-                                        </TableCell>
-                                    </>
+                                    <InputForm
+                                        employee={editEmployee}
+                                        handleInputChange={handleInputChange}
+                                    />
                                 ) : (
                                     <>
                                         <TableCell component='th' scope='row'>
@@ -113,27 +79,24 @@ const GetEmployees = () => {
                                         <TableCell align='left'>
                                             ${emp.salary.toLocaleString()}
                                         </TableCell>
-                                        <TableCell align='right'>
-                                            <EditEmployee
-                                                {...childProps}
-                                                employee={emp}
-                                            />
-                                            <Button
-                                                variant='contained'
-                                                color='error'
-                                                size='small'
-                                                onClick={() => handleDelete(emp)}
-                                            >
-                                                Delete
-                                            </Button>
-                                        </TableCell>
                                     </>
                                 )}
+                                <TableCell align='right'>
+                                    <EditEmployee
+                                        {...childProps}
+                                        employee={emp}
+                                    />
+                                    <RemoveEmployee
+                                        {...childProps}
+                                        employee={emp}
+                                    />
+                                </TableCell>
                             </TableRow>
-
                         ))}
                     </TableBody>
-                    <AddEmployee setEmployees={setEmployees} />
+                    <AddEmployee
+                        setEmployees={setEmployees}
+                    />
                 </Table>
             </TableContainer>
         </>

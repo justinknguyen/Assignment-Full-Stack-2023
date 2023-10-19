@@ -25,7 +25,7 @@ const AddEmployee = ({ setEmployees }) => {
             .catch(err => console.error(err));
     }
 
-    // Handles changes in the input fields
+    // Tracks changes in the text fields
     function handleInputChange(event) {
         const { name, value } = event.target;
         setNewEmployee({
