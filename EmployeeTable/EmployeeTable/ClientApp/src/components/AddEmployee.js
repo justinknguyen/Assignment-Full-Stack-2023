@@ -67,7 +67,7 @@ const AddEmployee = ({ setEmployees }) => {
 
     return (
         <>
-            <h1>Add an Employee</h1>
+            <h2>Add an Employee</h2>
             <form noValidate onSubmit={handleSubmit}>
                 <Stack spacing={2} direction="row">
                     <TextField

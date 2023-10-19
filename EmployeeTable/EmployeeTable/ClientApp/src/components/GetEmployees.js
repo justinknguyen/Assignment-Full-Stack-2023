@@ -15,8 +15,8 @@ import AddEmployee from './AddEmployee';
  */
 const GetEmployees = () => {
     const [employees, setEmployees] = useState([]);
-    const [employeeEdit, setEmployeeEdit] = useState();
-    const [employeeData, setEmployeeData] = useState({
+    const [editEmployee, setEditEmployee] = useState();
+    const [updatedData, setUpdatedData] = useState({
         firstName: '',
         lastName: '',
         salary: ''
@@ -25,8 +25,8 @@ const GetEmployees = () => {
     // Handles changes in the input fields
     function handleInputChange(event) {
         const { name, value } = event.target;
-        setEmployeeData({
-            ...employeeEdit,
+        setUpdatedData({
+            ...editEmployee,
             [name]: value
         });
     };
@@ -45,7 +45,7 @@ const GetEmployees = () => {
             headers: {
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify(employeeData)
+            body: JSON.stringify(updatedData)
         })
             .then(res => {
                 if (res.ok) {
@@ -53,11 +53,11 @@ const GetEmployees = () => {
                     console.log('Updated the employee successfully!');
                     setEmployees(employees.map(emp => {
                         if (emp.id === employee.id) {
-                            return { ...emp, ...employeeData };
+                            return { ...emp, ...updatedData };
                         }
                         return emp;
                     }));
-                    setEmployeeEdit(null)
+                    setEditEmployee(null)
                 } else {
                     // Employee information could not be updated
                     console.error('Error editing the employee.');
@@ -95,8 +95,8 @@ const GetEmployees = () => {
     return (
         <>
             <h1>Employees</h1>
-            <TableContainer component={Paper}>
-                <Table sx={{ minWidth: 650 }} aria-label='simple table'>
+            <TableContainer component={Paper} sx={{ width: '75%' }}>
+                <Table aria-label='simple table'>
                     <TableHead>
                         <TableRow className='table-header'>
                             <TableCell className='header-text'>First Name</TableCell>
@@ -111,7 +111,7 @@ const GetEmployees = () => {
                                 key={emp.id}
                                 sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
                             >
-                                {employeeEdit === emp ? (
+                                {editEmployee === emp ? (
                                     <>
                                         <TableCell component='th' scope='row'>
                                             <TextField
@@ -156,7 +156,7 @@ const GetEmployees = () => {
                                             <Button
                                                 variant='contained'
                                                 color='secondary'
-                                                onClick={() => setEmployeeEdit(null)}
+                                                onClick={() => setEditEmployee(null)}
                                             >
                                                 Cancel
                                             </Button>
@@ -176,7 +176,7 @@ const GetEmployees = () => {
                                         <TableCell align='right'>
                                             <Button
                                                 variant='contained'
-                                                onClick={() => setEmployeeEdit(emp)}
+                                                onClick={() => setEditEmployee(emp)}
                                                 sx={{ marginRight: 1 }}
                                             >
                                                 Edit
