@@ -35,8 +35,7 @@ const AddEmployee = ({ setEmployees }) => {
     };
 
     // Add the new employee from the form's data
-    function handleSubmit(event) {
-        event.preventDefault();
+    function handleSubmit() {
         if (newEmployee.firstName === '' || newEmployee.lastName === '') {
             console.error('Please input a name.');
             return;
