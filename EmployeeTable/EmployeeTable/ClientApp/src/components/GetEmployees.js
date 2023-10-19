@@ -33,6 +33,13 @@ const GetEmployees = () => {
 
     // Update the employee's information based on the input fields
     function handleSave(employee) {
+        if (employee.firstName === '' ||
+            employee.lastName === '' ||
+            employee.salary === '') {
+            console.error('Please input all fields.');
+            return;
+        }
+
         fetch(`api/employees/${employee.id}`, {
             method: 'PUT',
             headers: {
@@ -82,7 +89,7 @@ const GetEmployees = () => {
         fetch('api/employees')
             .then(res => res.json())
             .then(res => setEmployees(res))
-            .catch(err => console.error(err))
+            .catch(err => console.error(err));
     }, []);
 
     return (
@@ -137,8 +144,22 @@ const GetEmployees = () => {
                                             />
                                         </TableCell>
                                         <TableCell align='right'>
-                                            <Button variant='text' onClick={() => handleSave(emp)}>Save</Button>
-                                            <Button variant='text' onClick={() => setEmployeeEdit(null)}>Cancel</Button>
+                                            <Button
+                                                variant='contained'
+                                                type='submit'
+                                                color='success'
+                                                onClick={() => handleSave(emp)}
+                                                sx={{ marginRight: 1 }}
+                                            >
+                                                Save
+                                            </Button>
+                                            <Button
+                                                variant='contained'
+                                                color='secondary'
+                                                onClick={() => setEmployeeEdit(null)}
+                                            >
+                                                Cancel
+                                            </Button>
                                         </TableCell>
                                     </>
                                 ) : (
@@ -153,8 +174,20 @@ const GetEmployees = () => {
                                             ${emp.salary.toLocaleString()}
                                         </TableCell>
                                         <TableCell align='right'>
-                                            <Button variant='text' onClick={() => setEmployeeEdit(emp)}>Edit</Button>
-                                            <Button variant='text' onClick={() => handleDelete(emp)}>Delete</Button>
+                                            <Button
+                                                variant='contained'
+                                                onClick={() => setEmployeeEdit(emp)}
+                                                sx={{ marginRight: 1 }}
+                                            >
+                                                Edit
+                                            </Button>
+                                            <Button
+                                                variant='contained'
+                                                color='error'
+                                                onClick={() => handleDelete(emp)}
+                                            >
+                                                Delete
+                                            </Button>
                                         </TableCell>
                                     </>
                                 )}
@@ -166,7 +199,7 @@ const GetEmployees = () => {
 
             <br></br>
 
-            <AddEmployee setEmployees={setEmployees}/>
+            <AddEmployee setEmployees={setEmployees} />
         </>
     );
 }

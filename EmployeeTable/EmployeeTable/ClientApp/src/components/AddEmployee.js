@@ -1,7 +1,6 @@
 import { useState } from 'react';
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
-import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
 
 /**
@@ -19,7 +18,7 @@ const AddEmployee = ({ setEmployees }) => {
         fetch('api/employees')
             .then(res => res.json())
             .then(res => setEmployees(res))
-            .catch(err => console.error(err))
+            .catch(err => console.error(err));
     }
 
     // Handles changes in the input fields
@@ -32,7 +31,15 @@ const AddEmployee = ({ setEmployees }) => {
     };
 
     // Add the new employee from the form's data
-    function handleSubmit() {
+    function handleSubmit(event) {
+        event.preventDefault();
+        if (newEmployee.firstName === '' ||
+            newEmployee.lastName === '' ||
+            newEmployee.salary === '') {
+            console.error('Please input all fields.');
+            return;
+        }
+
         fetch('api/employees', {
             method: 'POST',
             headers: {
@@ -61,19 +68,10 @@ const AddEmployee = ({ setEmployees }) => {
     return (
         <>
             <h1>Add an Employee</h1>
-            <Box
-                component='form'
-                sx={{
-                    '& .MuiTextField-root': { m: 1, width: '25ch' },
-                }}
-                autoComplete='off'
-                onSubmit={handleSubmit}
-            >
-
+            <form noValidate onSubmit={handleSubmit}>
                 <Stack spacing={2} direction="row">
                     <TextField
                         required
-                        id='outlined-required'
                         label='First Name'
                         name='firstName'
                         onChange={handleInputChange}
@@ -81,7 +79,6 @@ const AddEmployee = ({ setEmployees }) => {
                     />
                     <TextField
                         required
-                        id='outlined-required'
                         label='Last Name'
                         name='lastName'
                         onChange={handleInputChange}
@@ -89,7 +86,6 @@ const AddEmployee = ({ setEmployees }) => {
                     />
                     <TextField
                         required
-                        id='outlined-required'
                         label='Salary'
                         name='salary'
                         onChange={handleInputChange}
@@ -97,12 +93,12 @@ const AddEmployee = ({ setEmployees }) => {
                     />
                     <Button
                         variant='contained'
-                        onClick={handleSubmit}
+                        type='submit'
                     >
                         Submit
                     </Button>
                 </Stack>
-            </Box>
+            </form>
         </>
     );
 }
