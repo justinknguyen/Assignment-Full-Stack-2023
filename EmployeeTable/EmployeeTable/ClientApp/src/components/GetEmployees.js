@@ -17,8 +17,10 @@ import RemoveEmployee from './RemoveEmployee';
  */
 const GetEmployees = () => {
     const [employees, setEmployees] = useState([]);
+    const [removeEmployee, setRemoveEmployee] = useState(null);
     const [editEmployee, setEditEmployee] = useState(null);
     const [updatedData, setUpdatedData] = useState({
+        title: '',
         firstName: '',
         lastName: '',
         salary: ''
@@ -26,51 +28,55 @@ const GetEmployees = () => {
 
     const childProps = {
         employees, setEmployees,
+        removeEmployee, setRemoveEmployee,
         editEmployee, setEditEmployee,
         updatedData, setUpdatedData
     }
 
-    // Tracks changes in the text fields
-    function handleInputChange(event) {
-        const { name, value } = event.target;
-        setUpdatedData({
-            ...updatedData,
-            [name]: value
-        });
-    };
-
-    // Fetch all employees on page load
-    useEffect(() => {
+    // Update the employee list in parent to re-render table
+    function updateEmployeeList() {
         fetch('api/employees')
             .then(res => res.json())
             .then(res => setEmployees(res))
             .catch(err => console.error(err));
+    }
+
+    // Fetch all employees on page load
+    useEffect(() => {
+        updateEmployeeList();
     }, []);
 
     return (
         <>
             <h2>Employees</h2>
-            <TableContainer component={Paper} sx={{ width: '80%' }}>
+            <TableContainer component={Paper}>
                 <Table size='medium'>
+
                     <TableHead>
                         <TableRow className='table-header'>
-                            <TableCell className='header-text'>First Name</TableCell>
+                            <TableCell className='header-text'>Title</TableCell>
+                            <TableCell align='left' className='header-text'>First Name</TableCell>
                             <TableCell align='left' className='header-text'>Last Name</TableCell>
                             <TableCell align='left' className='header-text'>Salary</TableCell>
                             <TableCell align='right' className='header-text'>Actions</TableCell>
                         </TableRow>
                     </TableHead>
+
                     <TableBody>
                         {employees.map(emp => (
                             <TableRow key={emp.id}>
                                 {editEmployee === emp ? (
                                     <InputForm
                                         employee={editEmployee}
-                                        handleInputChange={handleInputChange}
+                                        form={updatedData}
+                                        setForm={setUpdatedData}
                                     />
                                 ) : (
                                     <>
                                         <TableCell component='th' scope='row'>
+                                            {emp.title}
+                                        </TableCell>
+                                        <TableCell align='left'>
                                             {emp.firstName}
                                         </TableCell>
                                         <TableCell align='left'>
@@ -81,6 +87,7 @@ const GetEmployees = () => {
                                         </TableCell>
                                     </>
                                 )}
+
                                 <TableCell align='right'>
                                     <EditEmployee
                                         {...childProps}
@@ -94,8 +101,9 @@ const GetEmployees = () => {
                             </TableRow>
                         ))}
                     </TableBody>
+
                     <AddEmployee
-                        setEmployees={setEmployees}
+                        updateEmployeeList={updateEmployeeList}
                     />
                 </Table>
             </TableContainer>

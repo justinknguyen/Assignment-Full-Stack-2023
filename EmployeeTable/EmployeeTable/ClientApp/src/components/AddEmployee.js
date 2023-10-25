@@ -9,33 +9,21 @@ import InputForm from './InputForm';
 /**
  * Add an employee to the database.
  */
-const AddEmployee = ({ setEmployees }) => {
+const AddEmployee = ({ updateEmployeeList }) => {
     const [addPressed, setAddPressed] = useState(false);
     const [newEmployee, setNewEmployee] = useState({
+        title: '',
         firstName: '',
         lastName: '',
         salary: ''
     });
 
-    // Update the employee list in parent to re-render table
-    function updateEmployeeList() {
-        fetch('api/employees')
-            .then(res => res.json())
-            .then(res => setEmployees(res))
-            .catch(err => console.error(err));
-    }
-
-    // Tracks changes in the text fields
-    function handleInputChange(event) {
-        const { name, value } = event.target;
-        setNewEmployee({
-            ...newEmployee,
-            [name]: value
-        });
-    };
-
     // Add the new employee from the form's data
     function handleSubmit() {
+        if (newEmployee.title === '') {
+            console.error('Please input a title.');
+            return;
+        }
         if (newEmployee.firstName === '' || newEmployee.lastName === '') {
             console.error('Please input a name.');
             return;
@@ -58,6 +46,7 @@ const AddEmployee = ({ setEmployees }) => {
                     setAddPressed(false)
                     updateEmployeeList();
                     setNewEmployee({
+                        title: '',
                         firstName: '',
                         lastName: '',
                         salary: ''
@@ -78,7 +67,8 @@ const AddEmployee = ({ setEmployees }) => {
                         <>
                             <InputForm
                                 employee={newEmployee}
-                                handleInputChange={handleInputChange}
+                                form={newEmployee}
+                                setForm={setNewEmployee}
                             />
                             <TableCell align='right'>
                                 <Button
@@ -103,6 +93,7 @@ const AddEmployee = ({ setEmployees }) => {
                     ) : (
                         <>
                             <TableCell component='th' scope='row'></TableCell>
+                            <TableCell align='left'></TableCell>
                             <TableCell align='left'></TableCell>
                             <TableCell align='left'></TableCell>
                             <TableCell align='right'>

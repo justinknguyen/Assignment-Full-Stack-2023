@@ -5,6 +5,7 @@ import Button from '@mui/material/Button';
  */
 const EditEmployee = ({ employee,
     employees, setEmployees,
+    removeEmployee, setRemoveEmployee,
     editEmployee, setEditEmployee,
     updatedData, setUpdatedData }) => {
 
@@ -18,6 +19,10 @@ const EditEmployee = ({ employee,
 
     // Update the employee's information based on the text fields
     function handleSave() {
+        if (updatedData.title === '') {
+            console.error('Please input a title.');
+            return;
+        }
         if (updatedData.firstName === '' || updatedData.lastName === '') {
             console.error('Please input a name.');
             return;
@@ -52,28 +57,48 @@ const EditEmployee = ({ employee,
             .catch(err => console.error(err));
     }
 
+    function removeCheck() {
+        if (removeEmployee && removeEmployee === employee) {
+            return null;
+        }
+
+        return (
+            <Button
+                variant='contained'
+                size='small'
+                sx={{ marginRight: 1 }}
+                onClick={handleEdit}
+            >
+                Edit
+            </Button >
+        );
+    }
+
     return (
         <>
-            {editEmployee ? (
-                <Button
-                    variant='contained'
-                    type='submit'
-                    color='success'
-                    size='small'
-                    sx={{ marginRight: 1 }}
-                    onClick={handleSave}
-                >
-                    Save
-                </Button>
+            {editEmployee === employee ? (
+                <>
+                    <Button
+                        variant='contained'
+                        type='submit'
+                        color='success'
+                        size='small'
+                        sx={{ marginRight: 1 }}
+                        onClick={handleSave}
+                    >
+                        Save
+                    </Button>
+                    <Button
+                        variant='outlined'
+                        color='error'
+                        size='small'
+                        onClick={() => setEditEmployee(null)}
+                    >
+                        Cancel
+                    </Button>
+                </>
             ) : (
-                <Button
-                    variant='contained'
-                    size='small'
-                    sx={{ marginRight: 1 }}
-                    onClick={handleEdit}
-                >
-                    Edit
-                </Button >
+                removeCheck()
             )}
         </>
     );

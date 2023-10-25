@@ -5,7 +5,8 @@ import Button from '@mui/material/Button';
  */
 const RemoveEmployee = ({ employee,
     employees, setEmployees,
-    editEmployee, setEditEmployee}) => {
+    removeEmployee, setRemoveEmployee,
+    editEmployee, setEditEmployee }) => {
 
     // Remove the employee based on Id
     function handleDelete() {
@@ -25,26 +26,48 @@ const RemoveEmployee = ({ employee,
             .catch(err => console.error(err));
     }
 
+    function editCheck() {
+        if (editEmployee && editEmployee === employee) {
+            return null;
+        }
+
+        return (
+            <Button
+                variant='contained'
+                color='error'
+                size='small'
+                onClick={() => setRemoveEmployee(employee)}
+            >
+                Delete
+            </Button>
+        );
+    }
+
     return (
         <>
-            {editEmployee ? (
-                <Button
-                    variant='outlined'
-                    color='error'
-                    size='small'
-                    onClick={() => setEditEmployee(null)}
-                >
-                    Cancel
-                </Button>
+            {removeEmployee === employee ? (
+                <>
+                    <Button
+                        variant='contained'
+                        type='submit'
+                        color='success'
+                        size='small'
+                        sx={{ marginRight: 1 }}
+                        onClick={handleDelete}
+                    >
+                        Confirm
+                    </Button>
+                    <Button
+                        variant='outlined'
+                        color='error'
+                        size='small'
+                        onClick={() => setRemoveEmployee(null)}
+                    >
+                        Cancel
+                    </Button>
+                </>
             ) : (
-                <Button
-                    variant='contained'
-                    color='error'
-                    size='small'
-                    onClick={handleDelete}
-                >
-                    Delete
-                </Button>
+                editCheck()
             )}
         </>
     );
