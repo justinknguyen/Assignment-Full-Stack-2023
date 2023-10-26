@@ -30,7 +30,8 @@ const GetEmployees = () => {
         employees, setEmployees,
         removeEmployee, setRemoveEmployee,
         editEmployee, setEditEmployee,
-        updatedData, setUpdatedData
+        updatedData, setUpdatedData,
+        updateEmployeeList
     }
 
     // Update the employee list in parent to re-render table

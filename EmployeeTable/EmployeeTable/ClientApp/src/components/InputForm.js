@@ -1,6 +1,6 @@
+import { useState, useEffect } from 'react';
 import TableCell from '@mui/material/TableCell';
 import TextField from '@mui/material/TextField';
-import { useState } from 'react';
 
 const InputForm = ({ employee, form, setForm }) => {
     const [isTitleError, setIsTitleError] = useState(false);
@@ -29,6 +29,12 @@ const InputForm = ({ employee, form, setForm }) => {
             setIsSalaryError(isNaN(Number(value)));
         }
     };
+
+    useEffect(() => {
+        setIsTitleError(form.title === '');
+        setIsFirstError(form.firstName === '');
+        setIsLastError(form.lastName === '');
+    }, []);
 
     return (
         <>

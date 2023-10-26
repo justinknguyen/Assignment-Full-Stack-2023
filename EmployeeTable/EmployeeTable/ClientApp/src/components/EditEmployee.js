@@ -4,8 +4,7 @@ import Button from '@mui/material/Button';
  * Edit an employee's information in the database.
  */
 const EditEmployee = ({ employee,
-    employees, setEmployees,
-    removeEmployee, setRemoveEmployee,
+    removeEmployee, updateEmployeeList,
     editEmployee, setEditEmployee,
     updatedData, setUpdatedData }) => {
 
@@ -42,12 +41,7 @@ const EditEmployee = ({ employee,
                 if (res.ok) {
                     // Employee information updated
                     console.log('Updated the employee successfully!');
-                    setEmployees(employees.map(emp => {
-                        if (emp.id === editEmployee.id) {
-                            return { ...emp, ...updatedData };
-                        }
-                        return emp;
-                    }));
+                    updateEmployeeList();
                     setEditEmployee(null)
                 } else {
                     // Employee information could not be updated
